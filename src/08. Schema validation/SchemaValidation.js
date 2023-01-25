@@ -19,11 +19,52 @@ mongoDBConnect()
 
 // ======================================================================
 //02. create a schema
+// schema validation
 const usersSchema = mongoose.Schema({
-  name: String,
-  location: String,
-  age:Number
+    name: {
+        type: String,
+        required: [true, "nams is requird"],
+        maxlength: 10,
+        lowercase: true,
+        enum: {
+            values: ["rejaul", "ramjan","kamal"], // only ey data golo name hisabe dite parbe
+            message:"name is not supported"
+        }
+  },
+    location: {
+        type: String,
+        required: true,
+        minlength: 3,
+        uppercase: true,
+        trim:true, // cleen spass
+        
+  },
+    age: {
+        type: Number,
+        required: true,
+        min: 18,
+        max: 60,
+        unique:true
+    },
+    email: {
+        type: String,
+        unique: true
+    },
+    // custom validation
+    number: {
+        type: Number,
+        required: [true, 'User number number required'],
+        validate: {
+        validator: function(v) {
+          return v>10
+        },
+         message: props => `${props.value} is not a valid phone number!`
+       },
+    }
+  
 })
+
+
 
 
 // ======================================================================
@@ -38,7 +79,9 @@ app.post("/users", async (req, res) => {
       const newUsers = await new Users({
       name:  req.body.name,
       location:req.body.location,
-      age:req.body.age
+      age: req.body.age,
+      email: req.body.email,
+      number:req.body.number,
     })
     await newUsers.save()
     res.status(202).send("data is saved to databass")
@@ -49,31 +92,15 @@ app.post("/users", async (req, res) => {
 
 //=====================================================================
 // Routeing heare
-// get route , finding...
-// Find users , counting , souting , selecting 
-app.get('/users', async (req, res) => {
-  try {
-
-      const usesr =
-          
-        // Counting 
-        // await Users.find().countDocuments()
-      
-       // Sorting
-       // await Users.find().sort({ age: 1 }) // {age:1} -> soto teke boro
-       //  await Users.find().sort({ age: -1 }) // {age:-1} -> boro teke soto
-      
-       // selecting 
-       await Users.find().sort({ age: -1 }).select({name:1,_id:0}) // 1 -> return kurbe, 0-> return kurbena
-
-      res.status(200).send({
-          message:usesr
-      })
+// get data data
+app.get("/users", async (req, res) => {
+    try {
+        const user = await Users.find()
+        res.status(200).send(user)
+    } catch (error) {
+         res.status(404).send("data is not saved"+error.message)
+    }
     
-  } catch (error) {
-    res.status(404).send("data is not found , something worng")
-  }
-
 })
 
 // export file 

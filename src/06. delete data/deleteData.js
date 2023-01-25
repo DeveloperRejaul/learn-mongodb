@@ -49,31 +49,26 @@ app.post("/users", async (req, res) => {
 
 //=====================================================================
 // Routeing heare
-// get route , finding...
-// Find users , counting , souting , selecting 
-app.get('/users', async (req, res) => {
-  try {
-
-      const usesr =
-          
-        // Counting 
-        // await Users.find().countDocuments()
-      
-       // Sorting
-       // await Users.find().sort({ age: 1 }) // {age:1} -> soto teke boro
-       //  await Users.find().sort({ age: -1 }) // {age:-1} -> boro teke soto
-      
-       // selecting 
-       await Users.find().sort({ age: -1 }).select({name:1,_id:0}) // 1 -> return kurbe, 0-> return kurbena
-
-      res.status(200).send({
-          message:usesr
-      })
+// get route ,
+// delet data
+app.delete("/users/:id", async (req, res) => {
+    try {
+        const id = req.params.id
+        
+        const user =
+            
+            // delet data by deleteOne mathod
+            // await Users.deleteOne({ _id: id })
+        
+            // delet data by findByIdAndDelete mathod
+            await Users.findByIdAndDelete({ _id: id })
+        
+        
+        res.status(200).send(user);
+    } catch (error) {
+         res.status(404).send("data is not saved"+error.message)
+    }
     
-  } catch (error) {
-    res.status(404).send("data is not found , something worng")
-  }
-
 })
 
 // export file 
