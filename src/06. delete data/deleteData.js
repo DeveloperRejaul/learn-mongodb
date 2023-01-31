@@ -49,7 +49,6 @@ app.post("/users", async (req, res) => {
 
 //=====================================================================
 // Routeing heare
-// get route ,
 // delet data
 app.delete("/users/:id", async (req, res) => {
     try {
