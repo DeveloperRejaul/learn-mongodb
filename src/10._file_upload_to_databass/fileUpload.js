@@ -59,8 +59,6 @@ app.post('/profile', upload.single('avatar'), async function (req, res, next) {
      res.status(500).send(error.message)
   }
 })
-
-
 // upload file to server==============================
 
 app.get("/profile", function (req, res) {
